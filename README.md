@@ -86,6 +86,30 @@ launchctl kickstart -k gui/$(id -u)/com.<you>.claude-limits
 python3 claude_limits.py --selftest   # threshold + window-reset logic, no deps
 ```
 
+## Windows
+
+`claude_limits_win.py` is the Windows port — same logic, system-tray instead of
+menu bar. Differences:
+
+- A colored **dot** in the tray (🟢/🟡/🔴/grey for re-auth). Hover for the
+  live `2h44 34% · wk 5%` line; right-click for both limits + reset times,
+  **Refresh now**, and **Quit**.
+- Reads the token from `%USERPROFILE%\.claude\.credentials.json` (Windows Claude
+  Code stores creds as a plaintext file, not a keychain).
+- Notifications are native Windows toasts via the tray icon.
+
+```powershell
+git clone https://github.com/figueiredouc/claude-limits.git
+cd claude-limits
+python -m venv .venv
+.venv\Scripts\pip install pystray pillow
+.venv\Scripts\python claude_limits_win.py --probe   # verify endpoint
+.venv\Scripts\python claude_limits_win.py           # run
+```
+
+Auto-start at login: drop a shortcut to `pythonw.exe claude_limits_win.py` in
+`shell:startup` (`pythonw` = no console window).
+
 ## License
 
 MIT
